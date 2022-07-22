@@ -53,11 +53,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(blank=False, default=False)
     delete_at = models.DateTimeField(null=True, default=None)
-    user_products = models.ManyToManyField(to='myshop.Product',
-                                           null=True, blank=True,
-                                           related_name='selected_products')
-
-
+    # user_products = models.ManyToManyField(to='myshop.Product',
+    #                                        null=True, blank=True,
+    #                                        related_name='selected_products')
 
     objects = UserManager()
 
@@ -121,7 +119,7 @@ class Product(models.Model):
     colors_name = models.ForeignKey(Colors, on_delete=models.PROTECT, blank=True, null=True)
     socket_category_name = models.ForeignKey(SocketsCategory, on_delete=models.PROTECT, blank=True, null=True)
     to_basket = models.BooleanField(default=False, blank=True, null=True)
-    amount_for_basket = models.IntegerField(blank=True, null=True)
+    amount_for_basket = models.IntegerField(default=0, blank=True, null=True)
 
     def __str__(self):
         return f'{self.article} {self.name}'
@@ -133,8 +131,9 @@ class CartItem(models.Model):
     product_quantity = models.PositiveIntegerField()
 
 
-# class UserBasket(models.Model):
-#     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
-#     user_products = models.ManyToManyField(to='myshop.Product',
-#                                            null=True, blank=True,
-#                                            related_name='selected_products')
+class Basket(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    order = models.IntegerField(default=1, blank=True, null=True)
+    products_to_basket = models.ManyToManyField(to='myshop.Product',
+                                                null=True, blank=True,
+                                                related_name='selected_products')

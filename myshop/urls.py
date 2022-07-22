@@ -56,6 +56,6 @@ urlpatterns += [
 urlpatterns += [
     path('basket/add/', BasketView.as_view()),
     path('basket/get/', BasketView.as_view()),
-    path('basket/update/', BasketView.as_view()),
-    path('basket/delete/', BasketView.as_view())
+    path('basket/update/<int:pk>/', BasketView.as_view()),
+    path('basket/delete/<int:pk>/', BasketView.as_view())
 ]

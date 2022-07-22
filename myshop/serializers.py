@@ -39,15 +39,25 @@ class SocketCategoriesSerializer(serializers.ModelSerializer):
 
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
-        fields = ("id","name", "article", "price")
+        fields = "__all__"
+        model = Product
+
+class ProductBaskerSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = ("article", "name", "price", "amount_for_basket")
         model = Product
 
 class UserSerializer(serializers.ModelSerializer):
-    user_products =ProductSerializer(many=True)
+    user_products =ProductBaskerSerializer(many=True)
+
     class Meta:
         fields = ("email", "first_name", "last_name","user_products")
         model = User
 
 
-
+class BasketSerializer(serializers.ModelSerializer):
+    products_to_basket = ProductBaskerSerializer(many=True)
+    class Meta:
+        fields = "__all__"
+        model = Basket
 

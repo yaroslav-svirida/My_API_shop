@@ -14,6 +14,7 @@ admin.site.register(Collections)
 admin.site.register(Colors)
 admin.site.register(SocketsCategory)
 admin.site.register(CartItem)
+admin.site.register(Basket)
 
 
 class ProductResourse(resources.ModelResource):

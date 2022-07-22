@@ -1,46 +1,77 @@
+import openpyxl
+from django.http import Http404, HttpResponse
+from openpyxl import Workbook
+from openpyxl.styles import Alignment
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import Product, User
-from myshop.serializers import ProductSerializer, UserSerializer
+from .models import Product, User, Basket
+from myshop.serializers import ProductSerializer, UserSerializer, ProductBaskerSerializer, BasketSerializer
 
 
 class BasketView(APIView):
+    '''Create basket if not exists'''
 
     def post(self, request):
-        product_id = request.data.get("id")
-        product = Product.objects.get(id=product_id)
-        user_basket = User.objects.get(id=request.user.id)
-        user_basket.user_products.add(product)
-        user_basket.save()
-        user_basket_serialized = UserSerializer(user_basket).data
-        return Response(user_basket_serialized)
 
-    def get(self, request):
         user_id = request.user.id
-        user = User.objects.get(id=user_id)
-        user_serialized = UserSerializer(user).data
-        return Response(user_serialized)
+        if Basket.objects.get(id=user_id):
+            basket = Basket.objects.get(id=user_id)
+            products_for_basket = Product.objects.filter(to_basket=True)
 
-    def delete(self, request):
-        product_id = request.data.get("product_id")
-        product = Product.objects.get(id=product_id)
+
+
+            for prod in products_for_basket:
+                basket.products_to_basket.add(prod)
+            basket.save()
+            user_basket_serialized = BasketSerializer(basket).data
+            return Response(user_basket_serialized)
+
+        else:
+            basket = Basket.objects.create(id=user_id, user_id=user_id)
+            products_for_basket = Product.objects.filter(to_basket=True)
+
+            for prod in products_for_basket:
+                basket.products_to_basket.add(prod)
+            basket.save()
+            user_basket_serialized = BasketSerializer(basket).data
+            return Response(user_basket_serialized)
+
+    def delete(self, request, pk):
         user_id = request.user.id
-        user = User.objects.get(id=user_id)
-        user.user_products.remove(product)
+        basket = Basket.objects.get(id=user_id)
+        product = Product.objects.get(id=pk)
+        product.to_basket = 0
+        product.save()
+        basket.products_to_basket.remove(product)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    def put(self, request):
-        product_id = request.data.get("product_id")
-        product = Product.objects.get(id=product_id)
+class ExportBasketInExcel(APIView):
+    def get(self,request):
         user_id = request.user.id
-        user = User.objects.get(id=user_id)
-        user_product_for_update = user.user_products.get(product)
+        basket = Basket.objects.get(id=user_id)
+        products_for_basket = Product.objects.filter(to_basket=True)
 
+        alignment = Alignment(horizontal='center',
+                              vertical='center', )
+        workbook = Workbook()
+        ws = workbook.active
+        fields = ['Артикул', 'Наименование', 'Цена за шт с НДС', 'Количество']
+        column = 1
+        row = 1
+        for field in fields:
+            cell = ws.cell(column=column, row=1, value=field)
+            cell.alignment = alignment
+            column += 1
+        for product in products_for_basket:
+            row += 1
+            ws.cell(column=1, row=row, value=product.article)
+            ws.cell(column=2, row=row, value=product.name)
+            ws.cell(column=3, row=row, value=product.price)
+            ws.cell(column=4, row=row, value=product.amount)
 
-        serializer = UserSerializer(user_product_for_update, data = request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        response = HttpResponse(content_type='application/ms_excel')
+        response['Content_Disposition'] = f'attachment; filename = Data.xlsx'
+        workbook.save(response)
+        return response

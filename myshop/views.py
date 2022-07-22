@@ -4,6 +4,7 @@ from django.shortcuts import render
 
 # Create your views here.
 from rest_framework import status
+from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -224,6 +225,8 @@ class SocketsCategoryView(APIView):
 
 
 class ProductView(APIView):
+
+
     def post(self, request):
         name = request.data.get("name")
         product = Product.objects.create(name=name)
