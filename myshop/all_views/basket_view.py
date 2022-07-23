@@ -6,37 +6,42 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import Product, User, Basket
+from myshop.models import Product, User, Basket
 from myshop.serializers import ProductSerializer, UserSerializer, ProductBaskerSerializer, BasketSerializer
 
 
 class BasketView(APIView):
-    '''Create basket if not exists'''
+
+
+    def get(selfself, request):
+
+        basket = Basket.objects.get(id=request.user.id)
+        product_serialized = BasketSerializer(basket).data
+        return Response(product_serialized)
 
     def post(self, request):
 
         user_id = request.user.id
-        if Basket.objects.get(id=user_id):
-            basket = Basket.objects.get(id=user_id)
-            products_for_basket = Product.objects.filter(to_basket=True)
 
+        # if Basket.objects.get(id=user_id) is True:
+        #     basket = Basket.objects.get(id=user_id)
+        #     products_for_basket = Product.objects.filter(to_basket=True)
+        #
+        #     for prod in products_for_basket:
+        #         basket.products_to_basket.add(prod)
+        #     basket.save()
+        #     user_basket_serialized = BasketSerializer(basket).data
+        #     return Response(user_basket_serialized)
+        #
+        # else:
+        basket = Basket.objects.create(id=user_id, user_id=user_id)
+        products_for_basket = Product.objects.filter(to_basket=True)
 
-
-            for prod in products_for_basket:
-                basket.products_to_basket.add(prod)
-            basket.save()
-            user_basket_serialized = BasketSerializer(basket).data
-            return Response(user_basket_serialized)
-
-        else:
-            basket = Basket.objects.create(id=user_id, user_id=user_id)
-            products_for_basket = Product.objects.filter(to_basket=True)
-
-            for prod in products_for_basket:
-                basket.products_to_basket.add(prod)
-            basket.save()
-            user_basket_serialized = BasketSerializer(basket).data
-            return Response(user_basket_serialized)
+        for prod in products_for_basket:
+            basket.products_to_basket.add(prod)
+        basket.save()
+        user_basket_serialized = BasketSerializer(basket).data
+        return Response(user_basket_serialized)
 
     def delete(self, request, pk):
         user_id = request.user.id

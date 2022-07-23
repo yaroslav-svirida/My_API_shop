@@ -1,8 +1,9 @@
 from django.urls import path
 
-from myshop.basket_view import BasketView, ExportBasketInExcel
-from myshop.users_view import ListUsersView
-from myshop.views import CatalogView, BrendsView, CollectionsView, ColorsView, SocketsCategoryView, ProductView
+
+from myshop.all_views.basket_view import ExportBasketInExcel, BasketView
+from myshop.all_views.orders_view import OrdersView
+from myshop.views import ProductView, SocketsCategoryView, ColorsView, CollectionsView, BrendsView, CatalogView
 
 urlpatterns = [
     path('catalog/create/', CatalogView.as_view()),
@@ -63,3 +64,8 @@ urlpatterns += [
 urlpatterns += [
     path('basket_excel/get/', ExportBasketInExcel.as_view()),
 ]
+
+urlpatterns += [
+    path('create_order/post/', OrdersView.as_view()),
+]
+

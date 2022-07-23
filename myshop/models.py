@@ -137,3 +137,17 @@ class Basket(models.Model):
     products_to_basket = models.ManyToManyField(to='myshop.Product',
                                                 null=True, blank=True,
                                                 related_name='selected_products')
+
+
+class Orders(models.Model):
+
+
+    user = models.ForeignKey(User, on_delete=models.CASCADE,blank=True, null=True)
+    order_product = models.ManyToManyField(to='myshop.Product',
+                                                null=True, blank=True,
+                                                related_name='order_products')
+
+    cost_price = models.IntegerField(blank=True, null=True)
+    full_price = models.IntegerField(blank=True, null=True)
+    profit = models.IntegerField(blank=True, null=True)
+    data = models.DateTimeField(auto_now_add=True)
