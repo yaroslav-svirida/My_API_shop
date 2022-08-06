@@ -1,9 +1,9 @@
 from django.urls import path
 
-
-from myshop.all_views.basket_view import ExportBasketInExcel, BasketView
-from myshop.all_views.orders_view import OrdersView
-from myshop.views import ProductView, SocketsCategoryView, ColorsView, CollectionsView, BrendsView, CatalogView
+from myshop.all_views.basket_view import ExportBasketInExcel, ProductInBasketView
+from myshop.all_views.orders_view import OrdersView, ExportOrderInExcel
+from myshop.views import ProductView, SocketsCategoryView, ColorsView, CollectionsView, BrendsView, CatalogView, \
+    BasketView
 
 urlpatterns = [
     path('catalog/create/', CatalogView.as_view()),
@@ -44,7 +44,7 @@ urlpatterns += [
 urlpatterns += [
     path('product/create/', ProductView.as_view()),
     path('product/get/<int:pk>/', ProductView.as_view()),
-    path('product/get/', ProductView.as_view()),
+    path('product/get/', ProductView.as_view(), name='products-list'),
     path('product/update/<int:pk>/', ProductView.as_view()),
     path('product/delete/<int:pk>/', ProductView.as_view())
 ]
@@ -55,17 +55,24 @@ urlpatterns += [
 # ]
 
 urlpatterns += [
-    path('basket/add/', BasketView.as_view()),
+    path('basket/post/', BasketView.as_view()),
     path('basket/get/', BasketView.as_view()),
-    path('basket/update/<int:pk>/', BasketView.as_view()),
+    path('basket/put/<int:pk>/', BasketView.as_view()),
     path('basket/delete/<int:pk>/', BasketView.as_view())
 ]
 
 urlpatterns += [
+    path('product_in_basket/post/',  ProductInBasketView.as_view()),
+    path('product_in_basket/get/',  ProductInBasketView.as_view()),
+    path('product_in_basket/put/<int:pk>/',  ProductInBasketView.as_view()),
+    path('product_in_basket/delete/<int:pk>/',  ProductInBasketView.as_view())
+]
+
+urlpatterns += [
     path('basket_excel/get/', ExportBasketInExcel.as_view()),
+    path('order_excel/get/<int:pk>/', ExportOrderInExcel.as_view()),
 ]
 
 urlpatterns += [
     path('create_order/post/', OrdersView.as_view()),
 ]
-

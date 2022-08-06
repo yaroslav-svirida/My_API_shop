@@ -17,6 +17,7 @@ admin.site.register(CartItem)
 admin.site.register(Basket)
 
 
+
 class ProductResourse(resources.ModelResource):
     brend_name = fields.Field(column_name="brend_name",attribute="Бренд", widget=ForeignKeyWidget(Product,"name"))
     class Meta:
@@ -29,4 +30,17 @@ class ProductAdmin(ImportExportActionModelAdmin):
     # inlines = [ProductImageInline]
 
 
+
 admin.site.register(Product, ProductAdmin)
+
+admin.site.site_title = 'ИП Свирида Я.С.'
+admin.site.site_header = 'ИП Свирида Я.С. Розетки'
+
+class OrdersAdmin(admin.ModelAdmin):
+    list_display = ('user', 'get_products','cost_price', 'full_price','profit', 'data')
+    list_display_links = ('user', 'get_products')
+    search_fields = ('order_product',)
+
+
+admin.site.register(Orders, OrdersAdmin)
+

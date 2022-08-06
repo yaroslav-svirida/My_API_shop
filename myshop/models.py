@@ -4,8 +4,8 @@ from django.contrib.auth.models import PermissionsMixin
 from django.core.mail import send_mail
 from django.db import models
 
-
 # Create your models here.
+from rest_framework.reverse import reverse
 
 
 class UserManager(BaseUserManager):
@@ -19,12 +19,14 @@ class UserManager(BaseUserManager):
         user = self.model(email=email, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
+        basket = Basket.objects.create(user=user)
         return user
 
     def create_user(self, email=None, password=None, **extra_fields):
         extra_fields.setdefault('is_staff', False)
         extra_fields.setdefault('is_superuser', False)
         response = self._create_user(email, password, **extra_fields)
+
         send_mail(subject="Account Approved",
                   message="Hello we are TeachMeSkill Infocigans and we are "
                           "approved your account",
@@ -121,8 +123,8 @@ class Product(models.Model):
     to_basket = models.BooleanField(default=False, blank=True, null=True)
     amount_for_basket = models.IntegerField(default=0, blank=True, null=True)
 
-    def __str__(self):
-        return f'{self.article} {self.name}'
+    # def __str__(self):
+    #     return f'{self.article} {self.name}'
 
 
 class CartItem(models.Model):
@@ -133,21 +135,37 @@ class CartItem(models.Model):
 
 class Basket(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
-    order = models.IntegerField(default=1, blank=True, null=True)
-    products_to_basket = models.ManyToManyField(to='myshop.Product',
-                                                null=True, blank=True,
-                                                related_name='selected_products')
+    # user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
+
+    # order = models.IntegerField(default=1, blank=True, null=True)
+    # products_to_basket = models.ManyToManyField(to='myshop.Product',
+    #                                             null=True, blank=True,
+    #                                             related_name='selected_products')
+
+
+class ProductInBasket(models.Model):
+    basket_id = models.IntegerField(blank=True, null=True)
+    product_id = models.IntegerField(blank=True, null=True)
+    product_name = models.CharField(max_length=255, blank=True, null=True)
+    product_article = models.CharField(max_length=255, blank=True, null=True)
+    product_price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Цена', blank=True, null=True)
+    product_amount = models.IntegerField(blank=True, null=True, default=0)
 
 
 class Orders(models.Model):
-
-
-    user = models.ForeignKey(User, on_delete=models.CASCADE,blank=True, null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True)
     order_product = models.ManyToManyField(to='myshop.Product',
-                                                null=True, blank=True,
-                                                related_name='order_products')
+                                           null=True, blank=True,
+                                           related_name='order_products')
 
     cost_price = models.IntegerField(blank=True, null=True)
     full_price = models.IntegerField(blank=True, null=True)
     profit = models.IntegerField(blank=True, null=True)
     data = models.DateTimeField(auto_now_add=True)
+
+    def get_products(self):
+        return "\n".join([p.name for p in self.order_product.all()])
+
+    class Meta:
+        verbose_name = 'Заказы'
+        verbose_name_plural = 'Заказы'

@@ -44,7 +44,7 @@ class ProductSerializer(serializers.ModelSerializer):
 
 class ProductBaskerSerializer(serializers.ModelSerializer):
     class Meta:
-        fields = ("article", "name", "price", "amount_for_basket")
+        fields = ("id","article", "name", "price", "amount_for_basket")
         model = Product
 
 class UserSerializer(serializers.ModelSerializer):
@@ -66,3 +66,7 @@ class OrderSerializer(serializers.ModelSerializer):
         fields = "__all__"
         model = Orders
 
+class ProductInBasketSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = "__all__"
+        model = ProductInBasket

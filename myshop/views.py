@@ -10,7 +10,7 @@ from rest_framework.views import APIView
 
 from .models import *
 from .serializers import CatalogSerializer, BrendsSerializer, CollectionsSerializer, ColorsSerializer, \
-    SocketCategoriesSerializer, ProductSerializer
+    SocketCategoriesSerializer, ProductSerializer, BasketSerializer
 
 
 class CatalogView(APIView):
@@ -172,7 +172,7 @@ class ColorsView(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
 
     def put(self, request, pk):
-        color=Colors.objects.get(id=pk)
+        color = Colors.objects.get(id=pk)
         serializer = ColorsSerializer(color, data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -208,7 +208,7 @@ class SocketsCategoryView(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
 
     def put(self, request, pk):
-        socketCategory=SocketsCategory.objects.get(id=pk)
+        socketCategory = SocketsCategory.objects.get(id=pk)
         serializer = SocketCategoriesSerializer(socketCategory, data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -225,7 +225,6 @@ class SocketsCategoryView(APIView):
 
 
 class ProductView(APIView):
-
 
     def post(self, request):
         name = request.data.get("name")
@@ -246,7 +245,7 @@ class ProductView(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
 
     def put(self, request, pk):
-        product=Product.objects.get(id=pk)
+        product = Product.objects.get(id=pk)
         serializer = ProductSerializer(product, data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -259,4 +258,30 @@ class ProductView(APIView):
         except SocketsCategory.DoesNotExist:
             raise Http404
         product.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class BasketView(APIView):
+    def post(self, request):
+        id = request.data.get("id")
+        basket = Basket.objects.get(id=6)
+        product = Product.objects.get(id=id)
+        # product.amount_for_basket = request.data.get("amount_for_basket")
+        # product.save()
+        basket.products_to_basket.add(product)
+        basket.save()
+        user_basket_serialized = BasketSerializer(basket).data
+        return Response(user_basket_serialized)
+
+    def get(self, request):
+        basket = Basket.objects.get(id=6)
+        product_serialized = BasketSerializer(basket).data
+        return Response(product_serialized)
+
+    def delete(self, request, pk):
+        try:
+            basket = Basket.objects.get(pk=pk)
+        except Basket.DoesNotExist:
+            raise Http404
+        basket.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
