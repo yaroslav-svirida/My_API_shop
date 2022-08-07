@@ -35,6 +35,7 @@ class BasketView(APIView):
     #     basket.delete()
     #     return Response(status=status.HTTP_204_NO_CONTENT)
 
+
 #
 # def put(self, request, pk):
 #     user_id = request.user.id
@@ -51,16 +52,20 @@ class BasketView(APIView):
 class ProductInBasketView(APIView):
     def get(self, request):
         user_id = request.user.id
-        basket= Basket.objects.get(user_id=user_id)
+        basket = Basket.objects.get(user_id=user_id)
 
         basket_id = basket.id
         products = ProductInBasket.objects.filter(basket_id=basket_id)
-        products_serialized = ProductInBasketSerializer(products,many=True).data
+        products_serialized = ProductInBasketSerializer(products, many=True).data
         return Response(products_serialized)
 
     def delete(self, request, pk):
+        user_id = request.user.id
+        basket = Basket.objects.get(user_id=user_id)
+
+        basket_id = basket.id
         try:
-            product = ProductInBasket.objects.get(product_id=pk)
+            product = ProductInBasket.objects.filter(basket_id=basket_id, product_id=pk)
         except ProductInBasket.DoesNotExist:
             raise Http404
         product.delete()

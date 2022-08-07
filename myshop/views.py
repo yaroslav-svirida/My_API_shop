@@ -7,6 +7,7 @@ from rest_framework import status
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from myAPIshop.celery import select_brand
 
 from .models import *
 from .serializers import CatalogSerializer, BrendsSerializer, CollectionsSerializer, ColorsSerializer, \
@@ -236,6 +237,7 @@ class ProductView(APIView):
         try:
             if not pk:
                 product = Product.objects.all()
+                # select_brand.delay()
                 product_serialized = ProductSerializer(product, many=True).data
                 return Response(product_serialized)
             product = Product.objects.get(id=pk)

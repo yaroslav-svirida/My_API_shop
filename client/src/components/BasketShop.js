@@ -17,9 +17,9 @@ const BasketShop = observer(() => {
     return (
 
         <Row className='d-flex'>
-            <a href = 'http://127.0.0.1:8000/basket_excel/get/' target={'_blank'}>hi</a>
+
             <button onClick={fetchExcel}>Загрузить файл</button>
-                {device.basket(device =>
+                {device.basket.map(device =>
 
                     <DeviceBasketItem key={device.product_id} device={device}/>
 

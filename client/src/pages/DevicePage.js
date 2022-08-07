@@ -19,7 +19,7 @@ const DevicePage = () => {
         <Container className='mt-3'>
             <Row>
                 <Col md={4}>
-                    <Image width={250} height={300} src={process.env.REACT_APP_API_URL + device.img}/>
+                    <Image width={250} height={250} src={'https://ledpremium.by/upload/iblock/13c/a_897531.jpg'}/>
 
                 </Col>
 

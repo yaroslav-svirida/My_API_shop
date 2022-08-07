@@ -23,7 +23,7 @@ const DeviceItem = ({device}) => {
 
             <Card onClick={() => history.push(DEVICE_ROUTE + '/' + device.id)}
                   style={{width: 150, cursor: 'pointer'}} border={'light'}>
-                <Image width={150} height={150} src={process.env.REACT_APP_API_URL + device.img}/>
+                <Image width={150} height={150} src={'https://ledpremium.by/upload/iblock/13c/a_897531.jpg'}/>
                 <div className='text-black-50 d-flex justify-content-between align-items-center'>
                     <div>Schneider Electric</div>
                     <div className='mt-1 d-flex align-items-center'>

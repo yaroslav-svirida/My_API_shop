@@ -9,6 +9,7 @@ import axios from "axios";
 import {useState} from "react";
 import Form from "react-bootstrap/Form";
 import {Context} from "../index";
+import {observer} from "mobx-react-lite";
 
 
 const DeviceBasketItem = ({device}) => {
@@ -34,7 +35,7 @@ const DeviceBasketItem = ({device}) => {
 
             <Card onClick={() => history.push(DEVICE_ROUTE + '/' + device.product_id)}
                   style={{width: 150, cursor: 'pointer'}} border={'light'}>
-                <Image width={150} height={150} src={process.env.REACT_APP_API_URL + device.img}/>
+                <Image width={150} height={150} src={'https://ledpremium.by/upload/iblock/13c/a_897531.jpg'}/>
                 <div className='text-black-50 d-flex justify-content-between align-items-center'>
                     <div>Schneider Electric</div>
                     <div className='mt-1 d-flex align-items-center'>

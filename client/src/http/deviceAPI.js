@@ -63,12 +63,30 @@ export const fetchTypes = async (email, password) => {
     return data
 
 }
-export const fetchExcel = async () => {
-    const {data} = await $authHost.get('http://127.0.0.1:8000/basket_excel/get/')
+// export const fetchExcel = async () => {
+//     const {data} = await $authHost.get('http://127.0.0.1:8000/basket_excel/get/')
+//
+//     return data
+// }
 
-    return data
-
+export const fetchExcel = () => {
+    $authHost({
+        url: 'http://127.0.0.1:8000/basket_excel/get/', //your url
+        method: 'GET',
+        responseType: 'blob', // important
+    }).then((response) => {
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'file.xlsx'); //or any other extension
+        document.body.appendChild(link);
+        link.click();
+    });
 }
+
+
+
+
 export const createBrand = async (brand) => {
     const {data} = await $host.post('http://127.0.0.1:8000/brend/create/', brand)
     return data

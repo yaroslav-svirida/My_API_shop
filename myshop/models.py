@@ -27,11 +27,11 @@ class UserManager(BaseUserManager):
         extra_fields.setdefault('is_superuser', False)
         response = self._create_user(email, password, **extra_fields)
 
-        send_mail(subject="Account Approved",
-                  message="Hello we are TeachMeSkill Infocigans and we are "
-                          "approved your account",
-                  from_email=DEFAULT_FROM_EMAIL,
-                  recipient_list=[email])
+        # send_mail(subject="Account Approved",
+        #           message="Hello we are TeachMeSkill Infocigans and we are "
+        #                   "approved your account",
+        #           from_email=DEFAULT_FROM_EMAIL,
+        #           recipient_list=[email])
         return response
 
     def create_superuser(self, email=None, password=None, **extra_fields):

@@ -16,7 +16,7 @@ const DeviceList = observer(() => {
 
 
     const [value , setValue] = useState('')
-    const filteredCountries = device.name.filter(product =>{
+    const filteredCountries = device.device.filter(product =>{
 
             return product.name.toLowerCase().includes(value.toLowerCase())
 
