@@ -237,7 +237,7 @@ class ProductView(APIView):
         try:
             if not pk:
                 product = Product.objects.all()
-                # select_brand.delay()
+                select_brand.delay()
                 product_serialized = ProductSerializer(product, many=True).data
                 return Response(product_serialized)
             product = Product.objects.get(id=pk)

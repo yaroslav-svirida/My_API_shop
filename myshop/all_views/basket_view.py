@@ -126,6 +126,7 @@ class ExportBasketInExcel(APIView):
             column += 1
 
         number_of_product = 1
+        NDS = 1.38
 
         full_price_for_all_product = 0
 
@@ -138,7 +139,13 @@ class ExportBasketInExcel(APIView):
             ws.cell(column=3, row=row, value=product.product_name)
             ws.cell(column=4, row=row, value=product.product_amount).alignment = alignment
             ws.cell(column=5, row=row, value=product.product_price).alignment = alignment
-            full_price_for_one_product = product.product_price * product.product_amount
+            if product.product_price != None and product.product_amount != None:
+                full_price_for_one_product = product.product_price * product.product_amount
+            else:
+                product.product_amount = 1
+                product.product_price = 1
+                full_price_for_one_product = product.product_price * product.product_amount
+
             ws.cell(column=6, row=row, value=full_price_for_one_product).alignment = alignment
 
             full_price_for_all_product += full_price_for_one_product
