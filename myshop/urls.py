@@ -15,7 +15,7 @@ urlpatterns = [
 
 urlpatterns += [
     path('brend/create/', BrendsView.as_view()),
-    path('brend/get/<int:pk>/', BrendsView.as_view()),
+    path('brend/get/<int:pk>/', BrendsView.as_view(), name="brand_get"),
     path('brend/get/', BrendsView.as_view()),
     path('brend/update/<int:pk>/', BrendsView.as_view()),
     path('brend/delete/<int:pk>/', BrendsView.as_view())
@@ -62,10 +62,10 @@ urlpatterns += [
 ]
 
 urlpatterns += [
-    path('product_in_basket/post/',  ProductInBasketView.as_view()),
-    path('product_in_basket/get/',  ProductInBasketView.as_view()),
-    path('product_in_basket/put/<int:pk>/',  ProductInBasketView.as_view()),
-    path('product_in_basket/delete/<int:pk>/',  ProductInBasketView.as_view())
+    path('product_in_basket/post/', ProductInBasketView.as_view()),
+    path('product_in_basket/get/', ProductInBasketView.as_view()),
+    path('product_in_basket/put/<int:pk>/', ProductInBasketView.as_view()),
+    path('product_in_basket/delete/<int:pk>/', ProductInBasketView.as_view())
 ]
 
 urlpatterns += [

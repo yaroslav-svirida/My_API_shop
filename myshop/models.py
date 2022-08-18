@@ -123,8 +123,8 @@ class Product(models.Model):
     to_basket = models.BooleanField(default=False, blank=True, null=True)
     amount_for_basket = models.IntegerField(default=0, blank=True, null=True)
 
-    # def __str__(self):
-    #     return f'{self.article} {self.name}'
+    def __str__(self):
+        return f'{self.article} {self.name}'
 
 
 class CartItem(models.Model):

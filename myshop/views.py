@@ -86,7 +86,7 @@ class BrendsView(APIView):
                 all = Brends.objects.all()
                 all_serialezed = BrendsSerializer(all, many=True).data
                 return Response(all_serialezed)
-            all = Brends.objects.filter(id=pk)
+            all = Brends.objects.get(id=pk)
             all_serialezed = BrendsSerializer(all).data
             return Response(all_serialezed)
         except ObjectDoesNotExist:
@@ -237,7 +237,7 @@ class ProductView(APIView):
         try:
             if not pk:
                 product = Product.objects.all()
-                select_brand.delay()
+                # select_brand.delay()
                 product_serialized = ProductSerializer(product, many=True).data
                 return Response(product_serialized)
             product = Product.objects.get(id=pk)

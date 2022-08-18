@@ -1,12 +1,12 @@
 import logging
 
 from myAPIshop import app
-from myshop.models import Product
+from myshop.models import Product, ProductInBasket
 
 
 @app.task
 def group_by_color():
-    products=Product.objects.all()
+    products = Product.objects.all()
     for product in products:
         if 'ATN0001' in product.article:
             product.colors_name_id = 1
@@ -56,6 +56,8 @@ def group_by_color():
             logging.error(f" 'ATN001' {product.name}")
 
 
-
-
+@app.task
+def clear_basket():
+    products = ProductInBasket.objects.all()
+    products.delete()
 

@@ -7,7 +7,7 @@ https://docs.celeryproject.org/en/stable/django/first-steps-with-django.html
 from __future__ import absolute_import
 import os
 from celery import Celery
-
+from celery.schedules import crontab
 # this code copied from manage.py
 # set the default Django settings module for the 'celery' app.
 from myAPIshop import settings
@@ -47,6 +47,10 @@ def select_brand():
 app.conf.beat_schedule = {
     'add-every-30-seconds': {
         'task': 'myshop.tasks.group_by_color',
-        'schedule': 10.0
+        'schedule': 10000000.0
+    },
+    'clear-basket-one-time-a-day': {
+        'task': 'myshop.tasks.clear_basket',
+        'schedule': crontab(minute=0, hour=0)
     },
 }
